@@ -94,8 +94,8 @@ while not rospy.is_shutdown():
         accel_value = Kp * e + Kd * de
 
         # Calculating the force value for the joint, Control Law
-        # force = dynamic_model_func(cur_pos, float(desired_vel), accel_value, n_val)
-        force = gravCompensation(cur_pos, float(desired_vel), accel_value, n_val, flag)
+        force = dynamic_model_func(cur_pos, float(desired_vel), accel_value, n_val)
+        # force = gravCompensation(cur_pos, float(desired_vel), accel_value, n_val, flag)
         print('count', count)
         
         if count == 4000:
