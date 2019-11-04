@@ -140,7 +140,7 @@ BODY BottomArm:
 BODY WristPlatform:
   name: WristPlatform
   mesh: WristPlatform.STL
-  mass: 10.0000001 #0.4
+  mass: 10.0000001 #0.4 
   collision margin: 0.001
   scale: 1.0
   location:
@@ -245,7 +245,7 @@ JOINT ArmParallel-ArmParallel1:
   joint limits: {high: 1.571, low: -1.571}
   controller: {D: 2.1, I: 0, P: 1050.0}
   detached: true
-  type: revolute
+  type: fixed #revolute
   offset: -1.571
 JOINT BottomArm-WristPlatform:
   name: BottomArm-WristPlatform
@@ -267,7 +267,7 @@ JOINT OutPitch Shoulder-ArmParallel:
   parent pivot: {x: 0.0, y: 0.0, z: -0.19}
   child axis: {x: -0.0, y: 0.006, z: 1.0}
   child pivot: {x: 0.0, y: 0.0, z: 0.0}
-  joint limits: {high: 0.785, low: -0.61}
+  joint limits: {high: 1.5702, low: -0.61}
   controller: {D: 3.8, I: 0, P: 1900.0}
   detached: true
   type: revolute
@@ -295,7 +295,7 @@ JOINT ArmParallel-BottomArm:
   joint limits: {high: 0.785, low: -0.785}
   controller: {D: 3.4, I: 0, P: 1700.0}
   detached: true
-  type: revolute
+  type: fixed #revolute
   offset: 1.571
 JOINT Top Panel-OutPitch Shoulder:
   name: Top Panel-OutPitch Shoulder
