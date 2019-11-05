@@ -13,37 +13,6 @@ import position_control_utility as PU
 
 client = Client()
 client.connect()
-
-print(client.get_obj_names())
-
-mtm_handle = client.get_obj_handle('mtm/TopPanel')
-time.sleep(0.5)
-
-# p=client.get_obj_names()
-
-# p.pop(3)
-# p.pop(5)
-# p.pop(8)
-# p.pop(8)
-
-# p = [p[2],p[8],p[1],p[5],p[4],p[0],p[7],p[6],p[3]] # OutPitch, ArmParallel, ArmBottom, WristPlatform, WristPitch, WristYaw, WristRoll, ArmParallel1, ArmFront
-
-# handles=[]*len(p)
-# inertia=[]*len(p)
-
-# for i in range(len(p)):
-#     handle=client.get_obj_handle(p[i])
-#     inertia.append([handle.get_inertia()])
-
-# print(inertia)
-
-# while i < 1500:
-#     print(i)
-#     a = mtm_handle.get_all_joint_pos()
-#     a = a[0:7]
-#     print(a)
-# q1, q2, q3, q4, q5, q6, q7, dq1, dq2, dq3, dq4, dq5, dq6, dq7 = symbols("q1 q2 q3 q4 q5 q6 q7 dq1 dq2 dq3 dq4 dq5 dq6 dq7 ")
-
 Ia10=0
 Fo1 = 0
 Fo2 = 0
@@ -84,7 +53,7 @@ Fc10 = 0
 r1x = 0
 r1y = 0
 r1z = 0.17256
-m1 = 7.9205524
+m1 = 0.0	#7.9205524
 l1x = m1*r1x
 l1y = m1*r1y
 l1z = m1*r1z
@@ -98,7 +67,7 @@ L1xy = 0
 r2x = 0.0037061
 r2y = 0.0013265
 r2z =  0.0282395
-m2 = 10.9839011
+m2 = 0.65	#10.9839011
 l2x = m2*r2x
 l2y = m2*r2y
 l2z = m2*r2z
@@ -112,7 +81,7 @@ L2xy = 0
 r3x = 0.1397595
 r3y = 0.0300011
 r3z =  -0.030829
-m3 = 0.8122158
+m3 = 0.04 #0.8122158
 l3x = m3*r3x
 l3y = m3*r3y
 l3z = m3*r3z
@@ -126,7 +95,7 @@ L3xy = 0
 r4x =  -0.03008
 r4y = 0.00561715
 r4z =  0.00116871
-m4 = 10.0000001 #0.4 
+m4 = 0.14	#10.0000001 #0.4 
 l4x = m4*r4x
 l4y = m4*r4y
 l4z = m4*r4z
@@ -140,7 +109,7 @@ L4xy = 0
 r5x  = 0.0197278
 r5y  =  -0.0199995
 r5z  = -0.048018
-m5   =  0.9964826
+m5   =  0.04	#0.9964826
 l5x  = m5*r5x
 l5y  = m5*r5y
 l5z  = m5*r5z
@@ -157,7 +126,7 @@ L5xy = 0
 r6x  =  0.0017987
 r6y  = 0.0673491
 r6z  = -0.14802286
-m6   =  0.2077769
+m6   =  0.05	#0.2077769
 l6x  = m6*r6x
 l6y  = m6*r6y
 l6z  = m6*r6z
@@ -172,7 +141,7 @@ L6xy = 0
 r7x  = 0.0056432
 r7y  = 0.103802129
 r7z  = -0.129941
-m7   = 0.0659998
+m7   = 0.000 #0.0659998
 l7x  = m7*r7x
 l7y  = m7*r7y
 l7z  = m7*r7z
@@ -188,7 +157,7 @@ L7xy = 0
 r8x  =  0.06407491
 r8y  =  0.00291919
 r8z  = -0.1379173
-m8   =  0.0499978
+m8   =  0.00
 l8x  = m8*r8x
 l8y  = m8*r8y
 l8z  = m8*r8z
@@ -204,7 +173,7 @@ L8xy = 0
 r9x  = 0.00082111
 r9y  = -0.1003379
 r9z  = -0.0336667
-m9   =  0.0199972
+m9   =  0.00
 l9x  = m9*r9x
 l9y  = m9*r9y
 l9z  = m9*r9z
@@ -216,7 +185,6 @@ L9xz = 0
 L9xy = 0
 
 K7 = 0
-
 def compute_m(q):
 	q1 = q[0]
 	q2 = q[1]
@@ -286,16 +254,6 @@ def get_G(q):
 
 	G = np.array([g1,g2,g3,g4,g5,g6,g7])
 	return G
-
-
-def signal_handling(signum,frame):           
-    global terminate                         
-    terminate = True 
-
-terminate = False
-signal.signal(signal.SIGINT,signal_handling) 
-
-
 def get_all_joints():
 	q_feed = []
 	while len(q_feed)==0:
@@ -304,28 +262,40 @@ def get_all_joints():
 
 	q_comm = np.array([q_feed[5], q_feed[3], q_feed[0], q_feed[2], q_feed[7], q_feed[6],q_feed[8]])
 	return q_comm
-	
-	
-# def main():
-	# Initialization of TK App
-	# PU.init()
-	# App = PU.get_app_handle()
 
-client = Client()
-client.connect()
 mtm_handle = client.get_obj_handle('mtm/TopPanel')
+time.sleep(0.5)
+def signal_handling(signum,frame):           
+    global terminate                         
+    terminate = True 
+
+terminate = False
+signal.signal(signal.SIGINT,signal_handling) 
 
 q_old = get_all_joints()
 
-t = time.time()+0.06
+t = time.time()-0.06
 
-Kp = 250
-Kd = 0.150
+# Kp = 0.5	
+# Kd = 0.12
+# Ki = 0.07
+
+Kp = 0.5	
+Kd = 0.12
+Ki = 0.07
+
+# Position control Gains
+# Use get_joint_pos1() to deactivate internal PID Controller
+
+# Kp = 0.7
+# Kd = 0.07
+# Ki = 0.01
 
 qgoal = 20*3.1457/180
 qdotgoal = 0 
-for i in range(10000):	
-# while not terminate:
+errSum = 0 
+
+while not terminate:
 # The Kp and Kd gains
 	# Kp = PU.K_lin
 	# Kd = PU.D_lin
@@ -334,25 +304,30 @@ for i in range(10000):
 	# qgoal = PU.x
 	# qdotgoal = PU.y
 
-	# dt = time.time()-t
-	# t = time.time()
+	dt = time.time()-t
+	t = time.time()
 	
-	# q_new = get_all_joints()
-	# print('Degree Value: ',q_new[1]*180/3.1457)
-	# q_dot = (q_new- q_old)/dt
+	q_new = get_all_joints()
+	print('Degree Value: ',q_new[1]*180/3.1457)
+	q_dot = (q_new- q_old)/dt
 	
-	# G = get_G(q_new)
+	G = get_G(q_new)
+	err = q_new[1]-qgoal
+	errSum += err
+	tau = -(Kp *(err) + Kd*(q_dot[1]-qdotgoal) + Ki * errSum) + G[1] # +qgoal #G[1] #
 	
-	# tau = (Kp *(qgoal-q_new[1]) + Kd*(q_dot[1]))+ G[1] #qdotgoal-
-	
-	# print(tau[0])
+	print(tau)
 	# print(time.time()-t)
-	mtm_handle.set_joint_effort(3, 40)
-	# q_old = q_new
-	time.sleep(0.0001)
+	# mtm_handle.set_joint_pos1(3,tau)
+	mtm_handle.set_joint_effort(3,tau)
+	q_old = q_new
 
 print('run_complete')	
-client.clean_up()
-
-# if __name__== "__main__":
-#   main()	
+client.clean_up()	
+# for i in range(10000):
+# 	if terminate:
+# 		break
+# 	mtm_handle.set_joint_effort(3,40)
+# 	print(mtm_handle.get_joint_pos(3))
+# 	time.sleep(0.001)
+print('operation successful')

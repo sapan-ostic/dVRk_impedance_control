@@ -16,13 +16,14 @@ def yaml_dumper(filepath):
         yaml.dump(data, file_descriptor)
 
 # File path
-file_path = "/home/sapanostic/ambf/ambf_models/descriptions/multi-bodies/robots/blender-kuka3dof.yaml"
+file_path = "/home/farid/MTM_FARID/RBE501/YAML_files/blender-kuka3dof.yaml"
 data = yaml_loader(file_path)
 
 # Bodies and Joints count
 Bodies = []
 Joints = []
 bodies = data.get('bodies')
+
 for ele in bodies:
     Bodies.append(ele)
 
@@ -78,7 +79,7 @@ def get_inertial_offset(data, Bodies):
         inn_off_temp.append(data[bdy]['inertial offset']['position']['y'])
         inn_off_temp.append(data[bdy]['inertial offset']['position']['z'])
         inn_off_arr.append(inn_off_temp)
-
+    # print(inn_off_arr)    
     return np.array(inn_off_arr)
 
 # Function to get type of joint
@@ -88,7 +89,7 @@ def get_joint_type(data, Joints):
         J_temp = []
         J_temp.append(data[Joint]['type'])
         J_type.append(J_temp)
-
+    print('J_type ', J_type)    
     return np.array(J_type)
 
 # Function to get the distance vector between two adjacent bodies
@@ -103,7 +104,7 @@ def get_parent_pivot(data, Joints):
         pivot_type.append(pivot_temp_type)
     return np.array(pivot_type)
 
-# print("parent pivot value ", get_parent_pivot(data,Joints))
+print("parent pivot value ", get_parent_pivot(data,Joints))
 
 def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
     
@@ -112,6 +113,7 @@ def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
 
     # Creation of mass array from yaml file
     mass = get_mass_array(data, Bodies)
+    print('mass', mass)
 
     # Number of bodies present in the robot
     no_body, random_var = Bodies_count(data)
@@ -122,6 +124,8 @@ def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
     for count in range(0, int(no_body) - 1):
         joint_name_temp = np.append(joint_name_temp, [[joint_type_name]], axis=0)
     joint_name = joint_name_temp
+
+    print(joint_name)
 
     # The centre of mass array from yaml file
     com_val = get_inertial_offset(data, Bodies)
@@ -166,10 +170,11 @@ def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
     q[num_val]= q_val
     qdot[num_val] = qdot_val
     qddot[num_val] = qddot_val
-
+    # print(inertia_val)
+    # print(com_val)
     # RBDL inverse dynamics function
     rbdl.InverseDynamics(model, q, qdot, qddot, tau)
-    print "tau is ", tau
+    # print "tau is ", tau
 
     return tau
 
@@ -193,8 +198,8 @@ def gravCompensation(q_val, qdot_val, qddot_val, num_val, flag):
 
     # The centre of mass array from yaml file
     com_val = get_inertial_offset(data, Bodies)
-    print('=======')
-    print(mass)
+    # print('=======')
+    # print(mass)
 
     # The inertia array from yaml file
     inertia_val = get_inertia_values(data, Bodies)
@@ -254,3 +259,10 @@ def gravCompensation(q_val, qdot_val, qddot_val, num_val, flag):
 
     return tau
 
+q = np.array([0.1]*1).reshape(1,-1)
+qdot=q
+qddot=q
+num_val=1
+# print(mass_arr)
+
+dynamic_model_func(q,qdot,qddot,num_val)
