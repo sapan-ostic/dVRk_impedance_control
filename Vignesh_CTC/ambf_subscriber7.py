@@ -104,7 +104,6 @@ def get_parent_pivot(data, Joints):
         pivot_type.append(pivot_temp_type)
     return np.array(pivot_type)
 
-print("parent pivot value ", get_parent_pivot(data,Joints))
 
 def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
     
@@ -113,7 +112,6 @@ def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
 
     # Creation of mass array from yaml file
     mass = get_mass_array(data, Bodies)
-    print('mass', mass)
 
     # Number of bodies present in the robot
     no_body, random_var = Bodies_count(data)
@@ -125,7 +123,6 @@ def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
         joint_name_temp = np.append(joint_name_temp, [[joint_type_name]], axis=0)
     joint_name = joint_name_temp
 
-    print(joint_name)
 
     # The centre of mass array from yaml file
     com_val = get_inertial_offset(data, Bodies)
@@ -135,6 +132,12 @@ def dynamic_model_func(q_val, qdot_val, qddot_val, num_val):
 
     # The distance vector array between two adjacent bodies from yaml file
     r_val = get_parent_pivot(data, Joints)
+    
+    print 'mass', np.shape(mass)
+    print 'inertia: ', np.shape(inertia_val)
+    print 'com_pos: ', np.shape(r_val)
+    print 'joint type', np.shape(joint_name)
+    print "parent pivot value ", np.shape(get_parent_pivot(data,Joints))
 
     for i in range(0, no_body):
 
