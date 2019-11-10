@@ -3,7 +3,8 @@
 import rospy
 import std_msgs.msg
 from ambf_msgs.msg import ObjectState, ObjectCmd
-from dynamicsLib import *
+# from dynamicsLib import *
+from kuka2DOF import *
 from geometry_msgs.msg import Vector3
 
 # our global variables
@@ -30,9 +31,9 @@ def main():
 	rate = rospy.Rate(1000)   #1000hz
 
 	# Kp and Kd values
-	Kp = 20
-	Kd = 00.1
-	Ki = 0.005
+	Kp = 0#1
+	Kd =0 #00.001
+	Ki = 0.000
 	
 	# calculating the time difference
 	prev_time = rospy.Time.now().to_sec() - 0.06 #adding loop time for initial dt 
@@ -41,7 +42,7 @@ def main():
 	cmd_msg.enable_position_controller = False
 	cmd_msg.position_controller_mask = [False]
 
-	qGoal = 80*3.1457/180 
+	qGoal = 0*3.1457/180 
 	qdotGoal = 0
 
 	prev_pos = pos
@@ -55,7 +56,7 @@ def main():
 		prev_time = curr_time
 		curr_pos = pos
 		
-		print 'current pos:', curr_pos[1]*180/3.1457
+		print 'current pos:', curr_pos[1]*3.14/180
 		
 		q_dot = (curr_pos - prev_pos)/dt
 
@@ -66,7 +67,7 @@ def main():
 
 		err = curr_pos[1] - qGoal
 		errSum += err
-		tau	= -(Kp *(err) + Kd*(q_dot[1]-qdotGoal) + Ki * errSum) -5.87*G[0] # +qgoal #G[1] #5.85*
+		tau	= -(Kp *(err) + Kd*(q_dot[1]-qdotGoal) + Ki * errSum) +G[0] # +qgoal #G[1] #5.85*
 		
 		print 'tau', tau
 			
@@ -74,7 +75,7 @@ def main():
 		Header = std_msgs.msg.Header()
 		Header.stamp = rospy.Time.now()
 		cmd_msg.header = Header
-		cmd_msg.joint_cmds = [ 0, tau, 0, 0, 0, 0, 0]
+		cmd_msg.joint_cmds = [ 0, tau]#, 0, 0, 0, 0, 0]
 
 		# # print(" torque is ", cmd_msg.joint_cmds)
 

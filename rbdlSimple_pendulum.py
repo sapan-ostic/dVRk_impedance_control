@@ -77,12 +77,12 @@ q[0] = 3.14 #-3.141592654/2
 q[1] = 0 #
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
-COM_L1 = np.array([0.5, 0, 0])
+COM_L1 = np.array([0, 0, 01])
 COM_L1_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_1, COM_L1)
 print 'COM_L1_base: ', COM_L1_base
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
-COM_L2 = np.array([0.5, 0, 0])
+COM_L2 = np.array([0, 0, 1])
 COM_L2_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_2, COM_L2)
 
 print 'COM_L2_base: ', COM_L2_base
