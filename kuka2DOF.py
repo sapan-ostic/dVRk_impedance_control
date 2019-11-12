@@ -8,9 +8,15 @@ import yaml
 mass_arr = [[1],[1],[1]]#good
 mass_arr = np.array(mass_arr) 
 
-com_pos = [[0.001,0,0.06],[0.0,-0.017,0.134],[0.0,-0.074,0.009]]# good
+# Get the distance vector between two adjacent bodies
+parent_dist = [[0,0,0],[0,0,0.103],[-0.013,0.0,0.312]]#[[0,0,0],[1,0,0]]
+parent_dist = np.array(parent_dist)
+
+# create the COM for the bodies
+com_pos = [[0.001,0,0.06],[0.0,-0.017,0.134],[0.009,0,0.074]]# com_pos = [[0.001,0,0.06],[0.0,-0.017,0.134],[0.0,-0.074,0.009]]# good
 com_pos = np.array(com_pos)
 
+# create the inertia for the bodies
 inertia = [[0.01,0.01,0.01],[0.00815814, 0.007363868, 0.003293455],[0.00812252, 0.00329668, 0.00733904]]
 inertia = np.array(inertia) # 8x3
 
@@ -24,9 +30,7 @@ joint_fixed= rbdl.Joint.fromJointType ("JointTypeFixed") #for the base and the f
 # J_type = [['JointTypeRevoluteZ']] 
 # J_type = np.array(J_type)
 
-# Get the distance vector between two adjacent bodies
-parent_dist = [[0,0,0],[0,0,0.103],[-0.013,0.0,0.312]]#[[0,0,0],[1,0,0]]
-parent_dist = np.array(parent_dist)
+
 
 print 'mass', np.shape(mass_arr)
 print 'inertia', np.shape(inertia)
@@ -91,7 +95,7 @@ qddot = np.zeros (model.qdot_size)
 tau = np.zeros (model.qdot_size)
 print(np.shape(q))
 print(np.size(q))
-# q[0] =p3.14/2# 3.14
+q[0] =-105*3.14/180# 3.14
 #
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
@@ -112,18 +116,18 @@ print 'G: ', tau
 
 def get_G(q_):
     q_ = np.asarray(q_)
-    print "Commanded q is :", q_
+    # print "Commanded q is :", q_[1]*180/3.1457
     q = np.zeros(1)
     q[0] = q_[1]
     # print q
     qdot  = np.zeros(1)
     qddot = np.zeros(1)
     tau   = np.zeros(1)   
-
+    # print "q is:    ",q*180/3.1457
     # RBDL inverse dynamics function
     # print 'current pos:', q*180/3.1457
     rbdl.InverseDynamics(model, q, qdot, qddot, tau)
-    print tau
+    # print tau
     return tau
 
 # q = [0.1]*7 

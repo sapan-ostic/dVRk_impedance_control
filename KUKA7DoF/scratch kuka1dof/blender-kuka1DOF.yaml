@@ -15,11 +15,11 @@ BODY base:
   collision margin: 0.001
   scale: 1.0
   location:
-    orientation: {p: -0.0, r: 0.0, y: 1.57}
-    position: {x: 0.0, y: 0.0, z: 0.0}
+    orientation: {p: -0.0, r: 0.0, y: 1.57} #with respect to the world frame. means that the local frame link is rotated +pi/2 about the z axis of the local frame.
+    position: {x: 0.0, y: 0.0, z: 0.0} #with respect to the world frame
   inertial offset:
-    orientation: {p: 0, r: 0, y: 0}
-    position: {x: 0.001, y: -0.0, z: 0.06}
+    orientation: {p: 0, r: 0, y: 0} #with respect to the local frame
+    position: {x: 0.001, y: -0.0, z: 0.06} # with respect to the local frame
   inertia: {ix: .001, iy: .001, iz: .001}
   publish joint names: true
   publish joint positions: true
@@ -61,8 +61,8 @@ BODY link2:
   collision margin: 0.001
   scale: 1.0
   location:
-    orientation: {p: -0.0, r: -1.571, y: 1.57}
-    position: {x: -0.013, y: 0.0, z: 0.312}
+    orientation: {p: -0.0, r: -1.571, y: 1.57} # this means that the local frame of the link 2 is rotated -pi/2 in about the x-axis and pi/2 about the z-axis
+    position: {x: -0.013, y: 0.0, z: 0.312} # the amount of offset of the local frame with respect to the world frame
   inertial offset:
     orientation: {p: 0, r: 0, y: 0}
     position: {x: 0.0, y: -0.074, z: 0.009}
@@ -85,7 +85,7 @@ JOINT base-link1:
   child axis: {x: 0.0, y: 0.0, z: 1.0}
   child pivot: {x: 0.0, y: 0.0, z: 0.0}
   controller: {D: 2.0, I: 0, P: 1000.0}
-  type: fixed
+  type: revolute #fixed
 JOINT link1-link2:
   name: link1-link2
   parent: BODY link1

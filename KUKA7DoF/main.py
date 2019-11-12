@@ -4,7 +4,8 @@ import rospy
 import std_msgs.msg
 from ambf_msgs.msg import ObjectState, ObjectCmd
 # from dynamicsLib import *
-from kuka2DOF import *
+# from kuka2DOF import *
+from kuka2DOF_Spatial_Transform_case import *
 from geometry_msgs.msg import Vector3
 
 # our global variables
@@ -67,7 +68,7 @@ def main():
 
 		err = curr_pos[1] - qGoal
 		errSum += err
-		tau	= -(Kp *(err) + Kd*(q_dot[1]-qdotGoal) + Ki * errSum) +G[0] # +qgoal #G[1] #5.85*
+		tau	= -(Kp *(err) + Kd*(q_dot[1]-qdotGoal) + Ki * errSum) -G # +qgoal #G[1] #5.85*
 		
 		print 'tau', tau
 			
@@ -75,7 +76,7 @@ def main():
 		Header = std_msgs.msg.Header()
 		Header.stamp = rospy.Time.now()
 		cmd_msg.header = Header
-		cmd_msg.joint_cmds = [ 0, tau]#, 0, 0, 0, 0, 0]
+		cmd_msg.joint_cmds = [ tau[0], tau[1]]#, 0, 0, 0, 0, 0]
 
 		# # print(" torque is ", cmd_msg.joint_cmds)
 
