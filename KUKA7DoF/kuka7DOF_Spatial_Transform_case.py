@@ -55,22 +55,22 @@ trans1 = rbdl.SpatialTransform()
 trans1.E =np.eye(3)
 trans1.r = parent_dist[1]
 trans2 = rbdl.SpatialTransform()
-trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,1.0],[0.0,-1.0,0.0]])
+trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 trans2.r = parent_dist[2]
 trans3 = rbdl.SpatialTransform()
-trans3.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,1.0,0.0]])
+trans3.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 trans3.r = parent_dist[3]
 trans4 = rbdl.SpatialTransform()
-trans4.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,1.0,0.0]])
+trans4.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 trans4.r = parent_dist[4]
 trans5 = rbdl.SpatialTransform()
-trans5.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,1.0],[0.0,-1.0,0.0]])
+trans5.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
 trans5.r = parent_dist[5]
 trans6 = rbdl.SpatialTransform()
-trans6.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,1.0],[0.0,-1.0,0.0]])
+trans6.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
 trans6.r = parent_dist[6]
 trans7 = rbdl.SpatialTransform()
-trans7.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,1.0,0.0]])
+trans7.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 trans7.r = parent_dist[7]
 # DH parameters
 
@@ -140,9 +140,8 @@ q = np.zeros (model.q_size)
 qdot = np.zeros (model.qdot_size)
 qddot = np.zeros (model.qdot_size)
 tau = np.zeros (model.qdot_size)
-print(np.shape(q))
-print(np.size(q))
-q[1] =3.14/2#0#-105*3.14/180# 3.14
+print("shape of q:",np.shape(q))
+print("Size of q:",np.size(q))
 #
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
@@ -152,9 +151,10 @@ q[1] =3.14/2#0#-105*3.14/180# 3.14
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
 COM_L3 = np.array([0.0, -1.0, 0.0])
-COM_L3_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_4, COM_L3)
+COM_L3_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_3, COM_L3)
+q[1] =0#3.14/2#0#-105*3.14/180# 3.14
 
-print 'COM_L3_base: ', COM_L3_base
+print 'Point Location wrt base: ', COM_L3_base
 
 rbdl.InverseDynamics(model, q, qdot, qddot, tau)
 
@@ -165,7 +165,7 @@ def get_G(q_):
     q_ = np.asarray(q_)
     # print "Commanded q is :", q_[1]*180/3.1457
     q = np.zeros(7)
-    q[0] = q_[0]
+    q[0]=q_[0]
     q[1]=q_[1]
     q[2]=q_[2]
     q[3]=q_[3]

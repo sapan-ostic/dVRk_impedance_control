@@ -105,7 +105,7 @@ qddot = np.zeros (model.qdot_size)
 tau = np.zeros (model.qdot_size)
 print(np.shape(q))
 print(np.size(q))
-q[0] =3.14/2#0#-105*3.14/180# 3.14
+q[0] =0#-105*3.14/180# 3.14.3.14/2#
 #
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame

@@ -77,6 +77,7 @@ def main():
 		Header = std_msgs.msg.Header()
 		Header.stamp = rospy.Time.now()
 		cmd_msg.header = Header
+		# cmd_msg.joint_cmds = [ tau[0], tau[1]]#,tau[2],tau[3],tau[4],tau[5],tau[6]]#,11.65* 0, 0, 0, 0, 0]
 		cmd_msg.joint_cmds = [ tau[0], tau[1],tau[2],tau[3],tau[4],tau[5],tau[6]]#,11.65* 0, 0, 0, 0, 0]
 
 		# # print(" torque is ", cmd_msg.joint_cmds)
