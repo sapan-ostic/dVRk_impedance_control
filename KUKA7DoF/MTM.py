@@ -55,7 +55,7 @@ trans1 = rbdl.SpatialTransform()
 trans1.E =np.eye(3)
 trans1.r = parent_dist[1]
 trans2 = rbdl.SpatialTransform()
-trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
+trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 trans2.r = parent_dist[2]
 trans3 = rbdl.SpatialTransform()
 trans3.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
@@ -72,7 +72,6 @@ trans6.r = parent_dist[6]
 trans7 = rbdl.SpatialTransform()
 trans7.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 trans7.r = parent_dist[7]
-# A=np.array([],[])
 # DH parameters
 # trans = rbdl.SpatialTransform()
 # trans.E = np.eye(3)#np.array([[0.0, -1.0, 0.0],[1.0,0.0,0.0],[0.0,0.0,1.0]])
@@ -174,7 +173,7 @@ print("Size of q:",np.size(q))
 # print 'COM_L1_base: ', COM_L1_base
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
-q[1] =3.14/2#0#-105*3.14/180# 3.14
+q[1] =0#3.14/2#0#-105*3.14/180# 3.14
 COM_L3 = np.array([0.0, -1.0, 0.0])
 COM_L3_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_3, COM_L3)
 

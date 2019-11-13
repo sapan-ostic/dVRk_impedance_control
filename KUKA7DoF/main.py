@@ -69,7 +69,7 @@ def main():
 
 		err = curr_pos[1] - qGoal
 		errSum += err
-		tau	= -(Kp *(err) + Kd*(q_dot[1]-qdotGoal) + Ki * errSum) -G # +qgoal #G[1] #5.85*
+		tau	= -(Kp *(err) + Kd*(q_dot[1]-qdotGoal) + Ki * errSum) +G # +qgoal #G[1] #5.85*
 		
 		print 'tau', tau
 			
