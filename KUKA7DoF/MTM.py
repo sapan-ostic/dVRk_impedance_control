@@ -5,12 +5,12 @@ import yaml
 
 # Create a body for a given mass, center of mass, and inertia at
 # the CoM
-mass_arr = [[1],[1],[1],[1],[1],[1],[1],[1]]#good
+mass_arr = [[1],[1],[0.9],[0.8],[0.4],[0.2],[0.2],[0.1]]#good
 mass_arr = np.array(mass_arr) 
 
 # Get the distance vector between two adjacent bodies
 # The location of the joints with respect to the previous links frame. These values are directly taken from the yaml file in Joints>parent pivot.
-parent_dist = [[0.0,0.0,0.0],[0.0,0.0,0.103],[0.0,0.013,0.209],[0.0,-0.194,-0.009],[0.0,-0.013,0.202],[-0.002,0.202,-0.008],[0.002,-0.052,0.204],[-0.003,-0.05,0.053]]
+parent_dist = [[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,-0.19],[-0.279,0.0,0.0],[-0.364,-0.15,0.0],[0.0,0.0,0.0],[0.0,0.002,0.0],[0.0,-0.039,0.0]]
 parent_dist = np.array(parent_dist)
 
 # create the COM for the bodies
@@ -18,11 +18,11 @@ parent_dist = np.array(parent_dist)
 # of that frame maybe different than the frame in which your link's joint frame is described in the RBDL. So, you have to find and define the COM w.r.t
 #the frame in which you described your model in the RBDL. The best way to do this is to open your model in the Blender software and campare your local frame
 # with the RBDL frame and find the corresponding values for the COM.
-com_pos = [[0.001,0,0.06],[0.0,-0.017,0.134],[0.0,-0.074,0.009],[0.0, 0.017, 0.134],[-0.001,0.081,0.008],[0.0,-0.017,0.129],[0.0,0.007,0.068],[0.006,0.0,0.015]]#
+com_pos = [[-0.008,0.064,0.028],[0.003,0.035,-0.119],[-0.109,0.012,0.02],[-0.188,-0.008,0.0],[0.0,-0.055,-0.054],[0.0,0.041,-0.037],[0.0,-0.031,-0.03],[0.0,0.0,-0.036]]#
 com_pos = np.array(com_pos)
 
 # create the inertia for the bodies
-inertia = [[0.01,0.01,0.01],[0.00815814, 0.007363868, 0.003293455],[0.00812252, 0.00329668, 0.00733904],[0.008159,0.007421,0.00330],[0.0081471,0.003297,0.0073715],[0.0077265,0.006950,0.00329],[0.002983,0.003299,0.003146],[0.000651,0.0006512,0.001120]] #
+inertia = [[0.01,0.01,0.01],[0.00917612905846,0.00935165844593 ,0.00447358060957],[0.0028003998026 ,0.0134169293445 ,0.0113575925399],[0.000255941352746,0.0105760140742,0.0105499806308],[0.00154081570742,0.000741332659588,0.000993899731644],[0.000397858888643,0.000210746289995,0.00022335809041],[0.000249514260856,0.000131564033426,0.000140374423125],[6.63469295292e-05,5.6484874291e-05,2.88978434528e-05]] #
 inertia = np.array(inertia) # 8x3
 
 
@@ -52,33 +52,34 @@ trans = rbdl.SpatialTransform()
 trans.E = np.eye(3)#np.array([[0.0, -1.0, 0.0],[1.0,0.0,0.0],[0.0,0.0,1.0]])
 trans.r = parent_dist[0]
 trans1 = rbdl.SpatialTransform()
-trans1.E =np.eye(3)
+trans1.E =np.array([[0.0, 1.0, 0.0],[-1.0,0.0,0.0],[0.0,0.0,1.0]])
 trans1.r = parent_dist[1]
 trans2 = rbdl.SpatialTransform()
-trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
+trans2.E = np.array([[0.0, 0.0, 1.0],[1.0,0.005,0.0],[-0.005,1.0,0.0]])
 trans2.r = parent_dist[2]
 trans3 = rbdl.SpatialTransform()
-trans3.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
+trans3.E =np.array([[0.0, 1.0, 0.0],[-1.0,0.0,0.0],[0.0,0.0,1.0]])
 trans3.r = parent_dist[3]
 trans4 = rbdl.SpatialTransform()
-trans4.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
+trans4.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,1.0],[0.0,-1.0,0.0]])
 trans4.r = parent_dist[4]
 trans5 = rbdl.SpatialTransform()
 trans5.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
 trans5.r = parent_dist[5]
 trans6 = rbdl.SpatialTransform()
-trans6.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
+trans6.E =np.array([[0.0, 0.0, 1.0],[-1.0,0.0,0.0],[0.0,-1.0,0.0]])
 trans6.r = parent_dist[6]
 trans7 = rbdl.SpatialTransform()
-trans7.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
+trans7.E =np.array([[0.0, 0.0, -1.0],[1.0,0.009,0.0],[0.009,-1.0,0.0]])
 trans7.r = parent_dist[7]
+# A=np.array([],[])
 # DH parameters
 # trans = rbdl.SpatialTransform()
 # trans.E = np.eye(3)#np.array([[0.0, -1.0, 0.0],[1.0,0.0,0.0],[0.0,0.0,1.0]])
 # trans.r = parent_dist[0]
 # trans1 = rbdl.SpatialTransform()
 # trans1.E =np.eye(3)
-# trans1.r = parent_dist[1]
+# trans1.r = parent_dist[1]: -0.005, y: 1.0, z:
 # trans2 = rbdl.SpatialTransform()
 # trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
 # trans2.r = parent_dist[2]
@@ -173,7 +174,7 @@ print("Size of q:",np.size(q))
 # print 'COM_L1_base: ', COM_L1_base
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
-q[1] =0#3.14/2#0#-105*3.14/180# 3.14
+q[1] =3.14/2#0#-105*3.14/180# 3.14
 COM_L3 = np.array([0.0, -1.0, 0.0])
 COM_L3_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_3, COM_L3)
 
