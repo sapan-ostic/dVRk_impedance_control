@@ -48,7 +48,52 @@ class KukaController:
 
 	def getJointState(self, data):
 		self.state = np.asarray(data.joint_positions) 
-		self.CTC_task_controller()
+		self.CTC_joint_controller()
+
+	def CTC_joint_controller(self):
+
+		Kp = 1*np.eye(self.NJoints)
+		Kd = 0.1*np.eye(self.NJoints)
+		Kd[5,5] = 0.5*0
+		Kd[3,3] = 0.5*0
+		# M = 0.00001*np.eye(self.NJoints)
+		
+		# stateGoal = np.array([-0.08,-1.5, 0.07, -0.9, -2.07, 2.2, -0.8])
+		stateGoal = np.array([0]*self.NJoints) 
+		velGoal = np.zeros(self.NJoints)
+		accGoal = np.zeros(self.NJoints)
+
+		# while loop stuff here
+		time = rospy.get_time()
+		dt = time - self.prev_time  
+		# print(1/dt)      
+		self.prev_time = time    
+
+		# x = get_end_effector_pos(self.state)
+		print "q = ", self.state
+
+		vel = (self.state - self.prev_state)/dt
+		wt_vel = (0.925*vel + 0.7192*self.prev_vel + 0.4108*self.prev_vel1+0.09*self.prev_vel2)/(0.4108+0.7192+0.925+0.09)
+		acc = (wt_vel - self.prev_wt_vel)/dt
+
+		err = stateGoal - self.state 
+		derr = velGoal - wt_vel
+		
+		acc_q =  accGoal + np.dot(Kp, err) + np.dot(Kd, derr)
+
+		tau = inverse_dynamics(self.state, wt_vel, acc_q)
+
+		self.cmd_msg.joint_cmds = [tau[0],tau[1],tau[2],tau[3],tau[4],tau[5],tau[6]] 
+		self.pub.publish(self.cmd_msg)
+
+		self.prev_state = self.state
+		self.prev_vel = vel
+		self.prev_vel1 = self.prev_vel
+		self.prev_vel2 = self.prev_vel1
+		self.prev_vel3 = self.prev_vel2
+		self.prev_vel4 = self.prev_vel3
+		self.prev_wt_vel = wt_vel
+
 
 	def CTC_task_controller(self):
 
@@ -91,7 +136,7 @@ class KukaController:
 		self.prev_state = self.state
 		self.prev_x = x
 
-	def CTC_joint_controller(self):
+	def pointcontrol_w_GravCompensation(self):
 
 		# Parameters for impedance controller
 		K = 2*np.eye(self.NJoints)
