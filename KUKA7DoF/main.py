@@ -7,7 +7,8 @@ from ambf_msgs.msg import ObjectState, ObjectCmd
 # from kuka2DOF import *
 # from kuka2DOF_Spatial_Transform_case import *
 # from kuka7DOF_Spatial_Transform_case import *
-from MTM import *
+# from MTM import *
+from MTM_closed_loop import *
 from geometry_msgs.msg import Vector3
 
 # our global variables
@@ -88,8 +89,11 @@ def main():
 		Header = std_msgs.msg.Header()
 		Header.stamp = rospy.Time.now()
 		cmd_msg.header = Header
-		# cmd_msg.joint_cmds = [ tau[0], tau[1]]#,tau[2],tau[3],tau[4],tau[5],tau[6]]#,11.65* 0, 0, 0, 0, 0]
-		cmd_msg.joint_cmds = [ tau[0], tau[1],tau[2],tau[3],tau[4],tau[5],tau[6]]#,11.65* 0, 0, 0, 0, 0]
+		# cmd_msg.joint_cmds = [ tau[0], tau[1]]#,tau[2],tau[3],tau[4],tau[5],tau[6]]
+		cmd_msg.joint_cmds = [tau[0],tau[1],tau[5],tau[2],tau[3],tau[6],tau[7],tau[8],tau[9]]# for theclosed loop MTM
+		# cmd_msg.joint_cmds = [tau[0],tau[1],tau[5],0,0,tau[6],tau[7],tau[8],tau[9]]# for theclosed loop MTM
+		# cmd_msg.joint_cmds = [ tau[0],tau[1],tau[2],tau[3],tau[4],tau[5],tau[6]# for the openloop system
+		
 
 		# # print(" torque is ", cmd_msg.joint_cmds)
 

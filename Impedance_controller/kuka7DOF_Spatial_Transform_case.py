@@ -178,17 +178,23 @@ print("Size of q:",np.size(q))
 # print 'COM_L1_base: ', COM_L1_base
 # Giving an arbitrary location described in the local frame and printing it's
 # location wrt the world frame
-q[1] =3.14/2 #0#-105*3.14/180# 3.14
-COM_L3 = np.array([0.0, -1.0, 0.0])
-COM_L3_base = rbdl.CalcBodyToBaseCoordinates (model, q, body_3, COM_L3)
 
 
-print 'Point Location wrt base: ', COM_L3_base
+def get_end_effector_pos(q):
+    point_local = np.array([0.0, 0.0, 0.0])
+    end_pos = rbdl.CalcBodyToBaseCoordinates(model, q, body_7, point_local)
+    return end_pos
 
-rbdl.InverseDynamics(model, q, qdot, qddot, tau)
+def get_end_effector_jacobian(q):
+    J = np.zeros([3,model.qdot_size])
+    point_local = np.array([0.0, 0.0, 0.0])
+    rbdl.CalcPointJacobian (model, q, body_7, point_local, J)
+    # rbdl.CalcBodySpatialJacobian(model, q, body_7, J, True)
+    return J
 
-print 'G: ', tau
-
+# print 'Point Location wrt base: ', COM_L3_base
+# rbdl.InverseDynamics(model, q, qdot, qddot, tau)
+# print 'G: ', tau
 
 def get_G(q_):
     q_ = np.asarray(q_)
@@ -212,7 +218,7 @@ def get_G(q_):
     # print tau
     return tau
 
-def impedence_control(q_,qdot_, qddot_):
+def inverse_dynamics(q_,qdot_, qddot_):
     q_ = np.asarray(q_)
     # print "Commanded q is :", q_[1]*180/3.1457
     q = np.zeros(7)

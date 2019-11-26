@@ -72,33 +72,7 @@ trans6.r = parent_dist[6]
 trans7 = rbdl.SpatialTransform()
 trans7.E =np.array([[0.0, 0.0, -1.0],[1.0,0.009,0.0],[0.009,-1.0,0.0]])
 trans7.r = parent_dist[7]
-# A=np.array([],[])
-# DH parameters
-# trans = rbdl.SpatialTransform()
-# trans.E = np.eye(3)#np.array([[0.0, -1.0, 0.0],[1.0,0.0,0.0],[0.0,0.0,1.0]])
-# trans.r = parent_dist[0]
-# trans1 = rbdl.SpatialTransform()
-# trans1.E =np.eye(3)
-# trans1.r = parent_dist[1]: -0.005, y: 1.0, z:
-# trans2 = rbdl.SpatialTransform()
-# trans2.E = np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
-# trans2.r = parent_dist[2]
-# trans3 = rbdl.SpatialTransform()
-# trans3.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
-# trans3.r = parent_dist[3]
-# trans4 = rbdl.SpatialTransform()
-# trans4.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
-# trans4.r = parent_dist[4]
-# trans5 = rbdl.SpatialTransform()
-# trans5.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
-# trans5.r = parent_dist[5]
-# trans6 = rbdl.SpatialTransform()
-# trans6.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,+1.0],[0.0,-1.0,0.0]])
-# trans6.r = parent_dist[6]
-# trans7 = rbdl.SpatialTransform()
-# trans7.E =np.array([[1.0, 0.0, 0.0],[0.0,0.0,-1.0],[0.0,+1.0,0.0]])
-# trans7.r = parent_dist[7]
-# Using principal inertia values from yaml file
+
 I_x = inertia[0][0]
 I_y = inertia[0][1]
 I_z = inertia[0][2]
@@ -207,9 +181,36 @@ def get_G(q_):
     rbdl.InverseDynamics(model, q, qdot, qddot, tau)
     # print tau
     return tau
-
+## Modified for the closed loop system
 # q = [0.1]*7 
 # q[2]=0.5   
 # # q = np.asarray(q)
 # Tau = get_G(q)
 # print(Tau)
+# def get_G(q_):
+#     q_ = np.asarray(q_)
+#     # print "Commanded q is :", q_[1]*180/3.1457
+#     q = np.zeros(7)
+#     q[0]=q_[0]
+#     q[1]=q_[1]
+#     q[2]=q_[2]
+#     q[3]=q_[5]
+#     q[4]=q_[6]
+#     q[5]=q_[7]
+#     q[6]=q_[8]
+#     # print q
+#     qdot  = np.zeros(7)
+#     qddot = np.zeros(7)
+#     tau   = np.zeros(7)   
+#     # print "q is:    ",q*180/3.1457
+#     # RBDL inverse dynamics function
+#     # print 'current pos:', q*180/3.1457
+#     rbdl.InverseDynamics(model, q, qdot, qddot, tau)
+#     # print tau
+#     return tau
+
+# # q = [0.1]*7 
+# # q[2]=0.5   
+# # # q = np.asarray(q)
+# # Tau = get_G(q)
+# # print(Tau)
