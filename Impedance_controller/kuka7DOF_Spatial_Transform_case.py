@@ -218,6 +218,47 @@ def get_G(q_):
     # print tau
     return tau
 
+def get_M(q_):
+    q_ = np.asarray(q_)
+    q = np.zeros(7)
+    
+    M = np.zeros([7,7])
+
+    q[0]=q_[0]
+    q[1]=q_[1]
+    q[2]=q_[2]
+    q[3]=q_[3]
+    q[4]=q_[4]
+    q[5]=q_[5]
+    q[6]=q_[6]
+
+    rbdl.CompositeRigidBodyAlgorithm(model, q, M, True)
+    return M
+
+def get_C_qdot(q_, qdot_):
+    q_ = np.asarray(q_)
+    # print "Commanded q is :", q_[1]*180/3.1457
+    q = np.zeros(7)
+    q[0]=q_[0]
+    q[1]=q_[1]
+    q[2]=q_[2]
+    q[3]=q_[3]
+    q[4]=q_[4]
+    q[5]=q_[5]
+    q[6]=q_[6]
+    # print q
+    qdot  = qdot_
+    qddot = np.zeros(7)
+    tau   = np.zeros(7)   
+    # print "q is:    ",q*180/3.1457
+    # RBDL inverse dynamics function
+    # print 'current pos:', q*180/3.1457
+    rbdl.InverseDynamics(model, q, qdot, qddot, tau)
+    G = get_G(q_)
+    tau = np.copy(tau - G)
+    return tau    
+
+
 def inverse_dynamics(q_,qdot_, qddot_):
     q_ = np.asarray(q_)
     # print "Commanded q is :", q_[1]*180/3.1457
