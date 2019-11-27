@@ -91,8 +91,8 @@ class KukaController:
 
 		# stateGoal = np.array([-0.08,-1.5, 0.07, -0.9, -2.07, 2.2, -0.8])
 		XGoal = traj[0]
-		XGoal[1] = 0.3
-		XGoal[2] = 0.2
+		XGoal[1] = -0.3
+		XGoal[2] = 0.3
 		XvelGoal = traj[1]
 		XaccGoal = 0*np.ones(3)
 
