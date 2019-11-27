@@ -174,9 +174,9 @@ Xs.r = np.array([0.,0.,0.])
 Xs.E = np.array([[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]])
 cs = rbdl.ConstraintSet()
 
+cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[0,0,0,1,0,0]), False, 0.1);
 cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[0,0,0,0,1,0]), False, 0.1);
-cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[0,0,0,0,0,1]), False, 0.1);
-cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[1,0,0,0,0,0]), False, 0.1);
+cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[0,0,1,0,0,0]), False, 0.1);
 # cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[0,0,0,1,0,0]), False, 0.1);
 # cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[0,0,0,0,1,0]), False, 0.1);
 # cs.AddLoopConstraint(body_4, Body_virtual, Xp, Xs,rbdl.SpatialVector(0,[1,0,0,0,0,0]), False, 0.1);
@@ -226,7 +226,6 @@ def get_G(q_):
     q[2]=q_[3]# Arm Parallel1
     q[3]=q_[4]# Arm Front
     q[4]=q_[2]    # virtual body
-    
     q[6]=q_[5]# WristPlatform
     q[7]=q_[6]# WristPitch
     q[8]=q_[7]# WristYaw
