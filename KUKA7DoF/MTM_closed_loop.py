@@ -225,7 +225,7 @@ def get_G(q_):
     q[5]=q_[2]# Bottom Arm
     q[2]=q_[3]# Arm Parallel1
     q[3]=q_[4]# Arm Front
-    q[4]=q_[2]    # virtual body
+    q[4]=q_[2]  # virtual body
     q[6]=q_[5]# WristPlatform
     q[7]=q_[6]# WristPitch
     q[8]=q_[7]# WristYaw

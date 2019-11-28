@@ -160,33 +160,6 @@ rbdl.InverseDynamics(model, q, qdot, qddot, tau)
 print 'G: ', tau
 
 
-def get_G(q_):
-    q_ = np.asarray(q_)
-    # print "Commanded q is :", q_[1]*180/3.1457
-    q = np.zeros(7)
-    q[0]=q_[0]
-    q[1]=q_[1]
-    q[2]=q_[2]
-    q[3]=q_[3]
-    q[4]=q_[4]
-    q[5]=q_[5]
-    q[6]=q_[6]
-    # print q
-    qdot  = np.zeros(7)
-    qddot = np.zeros(7)
-    tau   = np.zeros(7)   
-    # print "q is:    ",q*180/3.1457
-    # RBDL inverse dynamics function
-    # print 'current pos:', q*180/3.1457
-    rbdl.InverseDynamics(model, q, qdot, qddot, tau)
-    # print tau
-    return tau
-## Modified for the closed loop system
-# q = [0.1]*7 
-# q[2]=0.5   
-# # q = np.asarray(q)
-# Tau = get_G(q)
-# print(Tau)
 # def get_G(q_):
 #     q_ = np.asarray(q_)
 #     # print "Commanded q is :", q_[1]*180/3.1457
@@ -194,10 +167,10 @@ def get_G(q_):
 #     q[0]=q_[0]
 #     q[1]=q_[1]
 #     q[2]=q_[2]
-#     q[3]=q_[5]
-#     q[4]=q_[6]
-#     q[5]=q_[7]
-#     q[6]=q_[8]
+#     q[3]=q_[3]
+#     q[4]=q_[4]
+#     q[5]=q_[5]
+#     q[6]=q_[6]
 #     # print q
 #     qdot  = np.zeros(7)
 #     qddot = np.zeros(7)
@@ -208,6 +181,33 @@ def get_G(q_):
 #     rbdl.InverseDynamics(model, q, qdot, qddot, tau)
 #     # print tau
 #     return tau
+## Modified for the closed loop system
+# q = [0.1]*7 
+# q[2]=0.5   
+# # q = np.asarray(q)
+# Tau = get_G(q)
+# print(Tau)
+def get_G(q_):
+    q_ = np.asarray(q_)
+    # print "Commanded q is :", q_[1]*180/3.1457
+    q = np.zeros(7)
+    q[0]=q_[0]
+    q[1]=q_[1]
+    q[2]=q_[2]
+    q[3]=q_[5]
+    q[4]=q_[6]
+    q[5]=q_[7]
+    q[6]=q_[8]
+    # print q
+    qdot  = np.zeros(7)
+    qddot = np.zeros(7)
+    tau   = np.zeros(7)   
+    # print "q is:    ",q*180/3.1457
+    # RBDL inverse dynamics function
+    # print 'current pos:', q*180/3.1457
+    rbdl.InverseDynamics(model, q, qdot, qddot, tau)
+    # print tau
+    return tau
 
 # # q = [0.1]*7 
 # # q[2]=0.5   

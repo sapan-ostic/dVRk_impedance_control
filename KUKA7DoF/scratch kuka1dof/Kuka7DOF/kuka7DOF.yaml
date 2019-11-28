@@ -8,7 +8,7 @@ joints: [JOINT base-link1, JOINT link1-link2, JOINT link2-link3, JOINT link3-lin
   JOINT link4-link5, JOINT link5-link6, JOINT link6-link7]
 high resolution path: ./high_res/
 low resolution path: ./low_res/
-ignore inter-collision: true
+ignore inter-collision: false
 namespace: /ambf/env/
 BODY base:
   name: base
@@ -18,7 +18,7 @@ BODY base:
   scale: 1.0
   location:
     orientation: {p: -0.0, r: 0.0, y: 1.571}
-    position: {x: 0.0, y: 0.0, z: 0.0}
+    position: {x: 0.0, y: 0.0, z: -1.42 }
   inertial offset:
     orientation: {p: 0, r: 0, y: 0}
     position: {x: 0.001, y: -0.0, z: 0.06}

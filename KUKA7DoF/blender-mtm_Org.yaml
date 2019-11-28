@@ -36,7 +36,7 @@ joints: [
   ]
 high resolution path: ../../../ambf/ambf_models/meshes/dvrk/mtm/high_res/
 low resolution path:  ../../../ambf/ambf_models/meshes/dvrk/mtm/low_res/
-ignore inter-collision: true
+ignore inter-collision: false
 namespace: /ambf/env/mtm/
 BODY Top Panel:
   name: Top Panel
@@ -108,7 +108,7 @@ BODY ArmParallel:
 BODY ArmParallel1:
   name: ArmParallel1
   mesh: ArmParallel1.STL
-  mass: 0.15
+  mass: 0.01
   collision margin: 0.001
   scale: 1.0
   location:
@@ -130,7 +130,7 @@ BODY ArmParallel1:
 BODY ArmFront:
   name: ArmFront
   mesh: ArmFront.STL
-  mass: 0.15
+  mass: 0.01
   collision margin: 0.001
   scale: 1.0
   location:
@@ -287,7 +287,7 @@ JOINT ArmParallel-ArmParallel1:
   parent pivot: {x: 0.0, y: 0.0, z: 0.065}
   child axis: {x: 0.0, y: 0.0, z: 1.0}
   child pivot: {x: 0.0, y: 0.0, z: 0.0}
-  joint limits: {} #joint limits: {high: 1.571, low: -1.571}
+  joint limits: {high: 1.571, low: -1.571}
   controller: {D: 2.1, I: 0, P: 1050.0}
   type: revolute
   offset: -1.571
