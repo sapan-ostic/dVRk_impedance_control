@@ -11,16 +11,22 @@ from std_msgs.msg import Float64
 from geometry_msgs.msg import Vector3
 
 from ambf_msgs.msg import ObjectState, ObjectCmd
-from kuka7DOF_Spatial_Transform_case import *
+# from kuka7DOF_Spatial_Transform_case import *
+from MTM import *
+
 
 import numpy as np
 
 class KukaController:
 
 	def __init__(self):
-		rospy.init_node('kuka_gravity_compensation')
-		self.sub = rospy.Subscriber('/ambf/env/base/State', ObjectState, self.getJointState, queue_size=1)
-		self.pub = rospy.Publisher('/ambf/env/base/Command', ObjectCmd, queue_size=1)
+		# rospy.init_node('kuka_gravity_compensation')
+		# self.sub = rospy.Subscriber('/ambf/env/base/State', ObjectState, self.getJointState, queue_size=1)
+		# self.pub = rospy.Publisher('/ambf/env/base/Command', ObjectCmd, queue_size=1)
+		# rospy.init_node('kuka_gravity_compensation')
+		self.sub = rospy.Subscriber('/ambf/env/mtm/TopPanel/State', ObjectState, self.getJointState, queue_size=1)
+		self.pub = rospy.Publisher('/ambf/env/mtm/TopPanel/Command', ObjectCmd, queue_size=1)
+		rospy.init_node('MTM_Impedanc_Controller')
 		self.initialize_controller()        
 
 	def initialize_controller(self):    
@@ -29,13 +35,13 @@ class KukaController:
 		cmd_msg.position_controller_mask = [False]        
 
 		self.NJoints = get_joint_num()
-		self.cmd_msg = cmd_msg
+		self.cmd_msg = cmd_msg # what is the reason for this?
 		self.t0 = rospy.get_time()
 		self.prev_time = 0
 
 		## Joint Space
 		self.prev_state = np.zeros(self.NJoints)
-		self.prev_vel = np.zeros(self.NJoints)
+		self.prev_vel = np.zeros(self.NJoints) # creating 5 velocity instances for taking the avg of them in the weighted manner
 		self.prev_vel1 = np.zeros(self.NJoints)
 		self.prev_vel2 = np.zeros(self.NJoints)
 		self.prev_vel3 = np.zeros(self.NJoints)
@@ -43,18 +49,18 @@ class KukaController:
 		self.prev_wt_vel = np.zeros(self.NJoints)
 
 		## Task Space
-		self.prev_x = np.zeros(3)
+		self.prev_x = np.zeros(3) # Cartesian velocity of the end-effector in the task space (x,y,z)
 		self.prev_velX = np.zeros(3)
 
 		# Set end-effector desired velocity here
 		self.X_SPEED = np.zeros(3)
-		self.X_SPEED[0] = 1 
+		self.X_SPEED[0] = 1 # desired velocity of the end-effector in the x-direction is set to 1 m/s
 		
 		self.x_speed_local = self.X_SPEED 
 
 	def getJointState(self, data):
 		self.state = np.asarray(data.joint_positions) 
-		self.t = rospy.get_time() - self.t0 #clock
+		self.t = rospy.get_time() - self.t0 # Clock # How does the time work in here?
 		self.Task_impedance_control() 
 
 	def generate_trajectory(self, x):
@@ -66,7 +72,7 @@ class KukaController:
 		elif x[0] < xllim :
 			self.x_speed_local = self.X_SPEED
 
-		x_des = x + self.x_speed_local * (self.dt)	
+		x_des = x + self.x_speed_local * (self.dt)	# desired_speed = (desired_location-actual location)/dt => desired location= desired_speed*dt + actual location
 		velX_des = self.x_speed_local
 
 		print "x_speed_local : ", self.x_speed_local  
@@ -75,51 +81,55 @@ class KukaController:
 		return [x_des, velX_des]
 
 	def Task_impedance_control(self):
-
-		Kp = 0.3*np.eye(3) #Stiffness Matrix
+		# Kp,Kd, and Md are Positive definite matrices representing the desired stiffness damping and Inertia of the system
+		Kp = 0.3*np.eye(3) # Stiffness Matrix in Cartesian Space(x,y,z)
 		# Kp[1][1] = 0 
 		# Kp[2][2] = 0
 
-		Kd = 0.0001*np.eye(3) # Damping Matrix
-		Md = 0.02*np.eye(3)
+		Kd = 0.0001*np.eye(3) # Damping Matrix in Cartesian Space(x,y,z)
+		Md = 0.02*np.eye(3) # Desired Inertia Matrix 
 
 		self.dt = self.t - self.prev_time
-		x = get_end_effector_pos(self.state)
+		x = get_end_effector_pos(self.state) # reads the current joint states and finds the end-effector position wrt base (x,y,z)
 		print "x = ", x
 
 		traj = self.generate_trajectory(x)
 
 		# stateGoal = np.array([-0.08,-1.5, 0.07, -0.9, -2.07, 2.2, -0.8])
-		XGoal = traj[0]
-		XGoal[1] = -0.3
-		XGoal[2] = 0.3
-		XvelGoal = traj[1]
+		XGoal = traj[0] # Three instances including desired (x,y,z) values
+		XGoal[1] = -0.3 # Desired Y value of the end effector position
+		XGoal[2] = 0.3 # Desired Z value of the end effector postion
+		XvelGoal = traj[1] # Three instances including desired velocties of the end-effector (dx,dy,dz) values
 		XaccGoal = 0*np.ones(3)
 
 		# while loop stuff here
 
-	
+		# For the joint space case
 		vel = (self.state - self.prev_state)/self.dt
 		wt_vel = (0.925*vel + 0.7192*self.prev_vel + 0.4108*self.prev_vel1+0.09*self.prev_vel2)/(0.4108+0.7192+0.925+0.09)
 		acc = (wt_vel - self.prev_wt_vel)/self.dt
 
+		# For the task space control
 		velX = (x - self.prev_x)/self.dt
 		
-		errX = np.asarray(XGoal - x)
-		derrX = XvelGoal - velX
+		errX = np.asarray(XGoal - x) #The postion error 
+		derrX = XvelGoal - velX # The velocity error
 
 		J = get_end_effector_jacobian(self.state)
 		J_inv = np.linalg.pinv(J)
 
-		Mq = get_M(self.state)
+		Mq = get_M(self.state) # Inertia matrix computed in the joint space
 
-		Mx = np.dot(np.dot(np.transpose(J_inv),Mq),J_inv)
+		Mx = np.dot(np.dot(np.transpose(J_inv),Mq),J_inv) # Inertia matrix in the Taskspace(Inertia values are converted from the joint space values to the taskspace)
 
 		F = np.dot(np.dot(np.linalg.inv(Md), Mx),( np.dot(Kd, derrX) + np.dot(Kp, errX) ) )
+		# F_w_ext = (np.dot(np.linalg.inv(Md), Mx)-1) * F_ext +np.dot(np.dot(np.linalg.inv(Md), Mx),( np.dot(Kd, derrX) + np.dot(Kp, errX) ) )
+
 
 		G = get_G(self.state)
 		# G = inverse_dynamics(self.state, vel, acc)
-		tau = G + np.dot(np.transpose(J),F)
+		Fq = np.dot(np.transpose(J),F) # converting the torque values back to the joint space
+		tau = G + Fq # setting the required torque values to the manipulator joints
 
 		self.cmd_msg.joint_cmds = [tau[0],tau[1],tau[2],tau[3],tau[4],tau[5],tau[6]] 
 		self.pub.publish(self.cmd_msg)
@@ -128,9 +138,9 @@ class KukaController:
 		self.prev_state = self.state
 		self.prev_vel = vel
 		self.prev_vel1 = self.prev_vel
-		self.prev_vel2 = self.prev_vel1
-		self.prev_vel3 = self.prev_vel2
-		self.prev_vel4 = self.prev_vel3
+		self.prev_vel2 = self.prev_vel2
+		self.prev_vel3 = self.prev_vel3
+		self.prev_vel4 = self.prev_vel4
 		self.prev_wt_vel = wt_vel
 		self.prev_x = x			
 
