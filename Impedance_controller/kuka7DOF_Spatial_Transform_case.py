@@ -182,13 +182,13 @@ print("Size of q:",np.size(q))
 
 def get_end_effector_pos(q):
     point_local = np.array([0.0, 0.0, 0.0])
-    end_pos = rbdl.CalcBodyToBaseCoordinates(model, q, body_8, point_local)
+    end_pos = rbdl.CalcBodyToBaseCoordinates(model, q, body_7, point_local)
     return end_pos
 
 def get_end_effector_jacobian(q):
     J = np.zeros([3,model.qdot_size])
     point_local = np.array([0.0, 0.0, 0.0])
-    rbdl.CalcPointJacobian (model, q, body_8, point_local, J)
+    rbdl.CalcPointJacobian (model, q, body_7, point_local, J)
     # rbdl.CalcBodySpatialJacobian(model, q, body_7, J, True)
     return J
 
@@ -218,7 +218,7 @@ def get_G(q_):
     # print tau
     return tau
 
-def get_M(q_): # This function computes the joint space inertia matrix from a given model and the generalized state vector
+def get_M(q_):
     q_ = np.asarray(q_)
     q = np.zeros(7)
     
